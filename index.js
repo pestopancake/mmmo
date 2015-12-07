@@ -5,6 +5,7 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
 app.use('/img', express.static(__dirname + '/img'));
+app.use('/js', express.static(__dirname + '/js'));
 
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
@@ -72,7 +73,7 @@ s = {
     bomb: {src: imgsrc + "bombdeath.gif"},
     flag: {src: imgsrc + "bombflagged.gif"},
     open: [],
-}
+};
 
 s = {
     blank: 'blank',
@@ -80,7 +81,7 @@ s = {
     bomb: 'bomb',
     flag: 'flag',
     open: [],
-}
+};
 
 for(i=0;i<=8;++i){
     s.open[i] = {};
