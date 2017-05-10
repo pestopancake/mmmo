@@ -1,4 +1,4 @@
-require('daemon')();
+//require('daemon')();
 var express = require('express');
 var app = express();
 var http = require('http').Server(app);
@@ -19,19 +19,19 @@ io.on('connection', function(socket){
   console.log('a user connected');
   drawCanvas();
   socket.on('click', function(click){
-    
+
     if(isGameOver) {
         isGameOver = false;
         init();
         return true;
     }
-    
+
     checkThese = [];
     console.log('click ' + click.x +','+ click.y);
     updateState(click.x, click.y);
-    
+
     drawCanvas();
-    
+
   });
 
   socket.on('rightClick', function(click){
@@ -43,8 +43,8 @@ io.on('connection', function(socket){
 
 });
 
-http.listen(80, function(){
-  console.log('listening on *:80');
+http.listen(8000, function(){
+  console.log('listening on *:8000');
 });
 
 
@@ -134,7 +134,7 @@ function updateState(row,col) {
                 }
             }
             grid[row][col].state = s.open[bombCount];
-            
+
             if(bombCount == 0) {
                 for(var crow=row-1;crow<=row+1;++crow) {
                     for(var ccol=col-1;ccol<=col+1;++ccol) {
@@ -144,7 +144,7 @@ function updateState(row,col) {
                     }
                 }
             }
-            
+
         }
     }
 }
@@ -153,12 +153,12 @@ function gameOver() {
     isGameOver = true;
     for(row in grid) {
         for(col in grid[row]) {
-            
+
             if(grid[row][col].state == s.blank) {
                 if(grid[row][col].isBomb) {
                     grid[row][col].state = s.bomb;
                 }else{
-                    
+
                 }
             }
         }
@@ -167,4 +167,3 @@ function gameOver() {
 }
 
 init();
-
