@@ -65,7 +65,7 @@ var d = {
     bombChance: 0.1
 }
 
-var imgsrc = "http://46.101.17.224/img/";
+var imgsrc = "/img/";
 
 s = {
     blank: {src: imgsrc + "blank.gif"},
