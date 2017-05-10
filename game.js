@@ -9,7 +9,7 @@ var d = {
     showCols: 20
 }
 
-var imgsrc = "http://46.101.17.224/img/";
+var imgsrc = "/img/";
 
 s = {
     blank: new Image(),
@@ -54,12 +54,12 @@ window.onload = function() {
 
     mapCanvas = document.getElementById('mapCanvas');
     mapC = mapCanvas.getContext('2d');
-    
+
     mapCanvas.style.width = (d.rows * d.mapWidth) + "px";
     mapCanvas.style.height = (d.cols * d.mapHeight) + "px";
     mapC.canvas.width = d.rows * d.mapWidth;
     mapC.canvas.height = d.cols * d.mapHeight;
-    
+
     mapCanvas.addEventListener('mousedown', mapMouseDown, false);
     mapCanvas.addEventListener('mouseup', mapMouseUp, false);
     mapCanvas.addEventListener('mousemove', mapMouseMove, false);
@@ -72,7 +72,7 @@ window.onload = function() {
         d.cols = grid[0].length;
         drawCanvas();
     });
-    
+
     setInterval(drawMapCanvas, 100);
 
 }
@@ -81,7 +81,7 @@ var mapIsMouseDown = false;
 var mouseE = undefined;
 
 function drawMapCanvas(force) {
-  
+
     if(mapIsMouseDown) {
       var coord = getMapCoordFromMouse(mouseE);
       var row = coord.row;
@@ -91,10 +91,10 @@ function drawMapCanvas(force) {
         offset.x = row * d.width;
         offset.y = col * d.height;
       }
-      
+
       drawCanvas(true);
     }
-  
+
     for (row in grid) {
         for (col in grid[row]) {
             if (mapIsMouseDown || force || !isOldTile(row, col) || (grid[row][col].state != oldGrid[row][col].state)) {
