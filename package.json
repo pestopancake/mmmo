@@ -1,8 +1,13 @@
 {
-  "name": "mine",
-  "version": "0.0.1",
-  "description": "minesweep",
+  "name": "mmmo",
+  "version": "0.0.2",
+  "description": "minesweeper mmo",
   "license": "MIT",
+  "author": "stack overflow",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
   "repository": {
     "type": "git",
     "url": "git://github.com/pestopancake/mmmo.git"
