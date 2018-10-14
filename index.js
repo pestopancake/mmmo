@@ -15,20 +15,24 @@ app.get('/game.js', function(req, res){
   res.sendFile(__dirname + '/game.js');
 });
 
+payload = function(){
+    return {
+        isGameOver: isGameOver,
+        newGrid: grid
+    };
+};
+
 io.on('connection', function(socket){
   console.log('a user connected');
 
-  socket.emit('draw', grid);
+  socket.emit('draw', payload());
 
   socket.on('click', function(click){
 
     if(isGameOver) {
-        isGameOver = false;
-        init();
         return true;
     }
 
-    checkThese = [];
     console.log('click ' + click.x +','+ click.y);
     updateState(click.x, click.y);
 
@@ -38,8 +42,20 @@ io.on('connection', function(socket){
 
   socket.on('rightClick', function(click){
     if(isTile(click.x, click.y)){
-      grid[click.x][click.y].state = s.flag;
+      if(grid[click.x][click.y].state == 'flag'){
+        grid[click.x][click.y].state = 'blank';
+      } else {
+        grid[click.x][click.y].state = 'flag';
+      }
       drawCanvas();
+    }
+  });
+
+  socket.on('clickFace', function(){
+    if(isGameOver) {
+        isGameOver = false;
+        init();
+        return true;
     }
   });
 
@@ -68,14 +84,6 @@ var d = {
 }
 
 var imgsrc = "/img/";
-
-s = {
-    blank: {src: imgsrc + "blank.gif"},
-    bombClicked: {src: imgsrc + "bombrevealed.gif"},
-    bomb: {src: imgsrc + "bombdeath.gif"},
-    flag: {src: imgsrc + "bombflagged.gif"},
-    open: [],
-};
 
 s = {
     blank: 'blank',
@@ -107,7 +115,7 @@ function init() {
 }
 
 function drawCanvas() {
-    io.emit('draw', grid);
+    io.emit('draw', payload());
 }
 
 function isTile(row, col){
@@ -116,8 +124,6 @@ function isTile(row, col){
     }
     return false;
 }
-
-var checkThese = [];
 
 function updateState(row,col) {
     if(isTile(row,col) && grid[row][col].state == s.blank) {

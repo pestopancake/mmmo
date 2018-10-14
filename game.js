@@ -39,8 +39,15 @@ var offset = {
 };
 
 var socket;
+var face;
 
 window.onload = function() {
+
+    face = document.getElementById('face');
+    face.addEventListener('mouseup', function(){
+        socket.emit('clickFace');
+    }, false);
+
     canvas = document.getElementById('gcanvas');
     c = canvas.getContext('2d');
 
@@ -60,20 +67,35 @@ window.onload = function() {
     mapC.canvas.width = d.rows * d.mapWidth;
     mapC.canvas.height = d.cols * d.mapHeight;
 
+    window.addEventListener('contextmenu', function(ev) {
+        ev.preventDefault();
+        return false;
+    }, false);
     mapCanvas.addEventListener('mousedown', mapMouseDown, false);
     mapCanvas.addEventListener('mouseup', mapMouseUp, false);
     mapCanvas.addEventListener('mousemove', mapMouseMove, false);
 
     socket = io();
 
-    socket.on('draw', function(newGrid) {
+    socket.on('draw', function(data) {
         console.log('received draw');
-        if (!isGameOver) $('#face').removeClass('dead');
+        if (data.isGameOver){
+            isGameOver = true;
+            face.classList.add('dead');
+        } else {
+            isGameOver = false;
+            face.classList.remove('dead');
+        }
         oldGrid = grid;
-        grid = newGrid;
+        grid = data.newGrid;
         d.rows = grid.length;
         d.cols = grid[0].length;
         drawCanvas();
+    });
+    socket.on('gameover', function() {
+        isGameOver = true;
+        face.classList.remove('ooh');
+        face.classList.add('dead');
     });
 
     setInterval(drawMapCanvas, 100);
@@ -96,6 +118,9 @@ function drawMapCanvas(force) {
       }
 
       drawCanvas(true);
+    } else {
+    //   mapC.fillStyle = "rgba(255,100,100,0.2)";
+    //   mapC.fillRect(offset.x / d.width, offset.y / d.width, 20, 20);
     }
 
     for (row in grid) {
@@ -105,17 +130,21 @@ function drawMapCanvas(force) {
             }
         }
     }
-    mapC.fillStyle = "rgba(255,100,100,0.7)";
-    mapC.fillRect(offset.x / d.width, offset.y / d.width, 20, 20);
+    if (moveX !== 0 || moveY !== 0 || mapIsMouseDown || force || !isOldTile(row, col) || (grid[row][col].state != oldGrid[row][col].state)) {
+        mapC.strokeStyle = "rgba(255,100,100,0.8)";
+        mapC.strokeRect(offset.x / d.width, offset.y / d.width, 20, 20);
+    }
 }
 
 function drawMapTile(row, col) {
     var x = (row * d.width) - offset.x;
     var y = (col * d.height) - offset.y;
     if (grid[row][col].state == 'blank') {
-        mapC.fillStyle = "#000000";
+        mapC.fillStyle = "#770000";
+    } else if (grid[row][col].state == 'flag') {
+        mapC.fillStyle = "#000077";
     } else {
-        mapC.fillStyle = "#990000";
+        mapC.fillStyle = "#000000";
     }
     mapC.fillRect(row, col, d.mapWidth, d.mapHeight);
 }
@@ -127,58 +156,61 @@ var moveX = 0;
 var moveY = 0;
 var moveBy = d.height / 2;
 
+
 document.onkeydown = function(e) {
-
     e = e || window.event;
-
-    if (e.keyCode == '38') {
+    
+    if (e.keyCode == '38' || e.keyCode == '87') {
         moveY = -moveBy;
     }
-    else if (e.keyCode == '40') {
+    else if (e.keyCode == '40'|| e.keyCode == '83') {
         moveY = moveBy;
     }
-    else if (e.keyCode == '37') {
+    else if (e.keyCode == '37' || e.keyCode == '65') {
         moveX = -moveBy;
     }
-    else if (e.keyCode == '39') {
+    else if (e.keyCode == '39' || e.keyCode == '68') {
         moveX = moveBy;
     }
 
-    move(moveX, moveY);
-
+    return true;
 }
 
 document.onkeyup = function(e) {
-
     e = e || window.event;
 
-    if (e.keyCode == '38') {
+    if (e.keyCode == '38' || e.keyCode == '87') {
         moveY = 0;
     }
-    else if (e.keyCode == '40') {
+    else if (e.keyCode == '40'|| e.keyCode == '83') {
         moveY = 0;
     }
-    else if (e.keyCode == '37') {
+    else if (e.keyCode == '37' || e.keyCode == '65') {
         moveX = 0;
     }
-    else if (e.keyCode == '39') {
+    else if (e.keyCode == '39' || e.keyCode == '68') {
         moveX = 0;
     }
-
+    return true;
 }
 
+setInterval(function(){
+    move(moveX, moveY);
+}, 33);
+
 function move(x, y) {
-    if (offset.x + x >= 0 && offset.x + x <= (d.rows * d.width) - (d.showRows * d.width)) {
-        offset.x += x;
+    if(x !== 0 || y !== 0){
+        if (offset.x + x >= 0 && offset.x + x <= (d.rows * d.width) - (d.showRows * d.width)) {
+            offset.x += x;
+        }
+        if (offset.y + y >= 0 && offset.y + y <= (d.cols * d.height) - (d.showCols * d.height)) {
+            offset.y += y;
+        }
+        drawCanvas(true);
     }
-    if (offset.y + y >= 0 && offset.y + y <= (d.cols * d.height) - (d.showCols * d.height)) {
-        offset.y += y;
-    }
-    drawCanvas(true);
 }
 
 function drawCanvas(force) {
-    isGameOver = false;
     //c.clearRect(0,0,d.rows * d.width,d.rows * d.width);
     for (row in grid) {
         for (col in grid[row]) {
@@ -187,7 +219,7 @@ function drawCanvas(force) {
             }
         }
     }
-    $('#face').removeClass('ooh');
+    face.classList.remove('ooh');
 }
 
 function drawTile(row, col) {
@@ -195,9 +227,9 @@ function drawTile(row, col) {
     var y = (col * d.height) - offset.y;
     if (x > -d.width && y > -d.height && x < (d.showRows * d.width) + offset.x && y < (d.showCols * d.height) + offset.y) {
         c.drawImage(s[grid[row][col].state], x, y);
-        if (grid[row][col].state == 'bomb' || grid[row][col].state == 'bombClicked') {
-            if (!isGameOver) gameOver();
-        }
+        // if (grid[row][col].state == 'bomb' || grid[row][col].state == 'bombClicked') {
+        //     if (!isGameOver) gameOver();
+        // }
     }
 }
 
@@ -228,42 +260,52 @@ function getMapCoordFromMouse(e) {
 }
 
 function mouseDown(e) {
+    e.preventDefault();
+
+    if(isGameOver) return false;
 
     var coord = getCoordFromMouse(e);
     var row = coord.row;
     var col = coord.col;
     console.log('down' + row + ',' + col);
 
-    if (isTile(row, col) && grid[row][col].state == 'blank') {
-        $('#face').addClass('ooh');
-        $('#face').removeClass('dead');
+    if (isTile(row, col) && (grid[row][col].state == 'blank' || grid[row][col].state == 'flag')) {
+        face.classList.add('ooh');
+        face.classList.remove('dead');
         clickRow = row;
         clickCol = col;
         if (e.button == 2) {
             grid[row][col].state = 'flag';
         }
-        else {
+        else if (grid[row][col].state != 'flag') {
             grid[row][col].state = 'open0';
         }
         drawTile(row, col);
     }
+
+    return false;
 }
 
 function mouseUp(e) {
+    e.preventDefault();
+
+    if(isGameOver) return false;
 
     var coord = getCoordFromMouse(e);
     var row = coord.row;
     var col = coord.col;
-    console.log('up' + row + ',' + col);
+    console.log('up' + row + ',' + col + ' - ' + e.button);
 
     if (isTile(row, col) && row == clickRow && col == clickCol) {
         if (e.button == 2) {
+            console.log('emit r');
             socket.emit('rightClick', {
                 x: row,
                 y: col
             });
         }
         else {
+            console.log('emit l');
             socket.emit('click', {
                 x: row,
                 y: col
@@ -271,12 +313,14 @@ function mouseUp(e) {
         }
     }
     else if (clickRow != undefined && clickCol != undefined) {
-        $('#face').removeClass('ooh');
+        face.classList.remove('ooh');
         grid[clickRow][clickCol].state = 'blank';
         drawTile(clickRow, clickCol);
     }
     clickRow = undefined;
     clickCol = undefined;
+
+    return false;
 }
 
 function mapMouseMove(e) {
@@ -303,45 +347,4 @@ function isOldTile(row, col) {
         return true;
     }
     return false;
-}
-
-var checkThese = [];
-
-function updateState(row, col) {
-    if (isTile(row, col) && grid[row][col].state == s.blank) {
-        if (grid[row][col].isBomb) {
-            grid[row][col].state = s.bombClicked;
-            gameOver();
-        }
-        else {
-            var bombCount = 0;
-            for (var crow = row - 1; crow <= row + 1; ++crow) {
-                for (var ccol = col - 1; ccol <= col + 1; ++ccol) {
-                    if ((crow != row | ccol != col) && isTile(crow, ccol)) {
-                        if (grid[crow][ccol].isBomb) {
-                            ++bombCount;
-                        }
-                    }
-                }
-            }
-            grid[row][col].state = s.open[bombCount];
-
-            if (bombCount == 0) {
-                for (var crow = row - 1; crow <= row + 1; ++crow) {
-                    for (var ccol = col - 1; ccol <= col + 1; ++ccol) {
-                        if (isTile(crow, ccol)) {
-                            updateState(crow, ccol);
-                        }
-                    }
-                }
-            }
-
-        }
-    }
-}
-
-function gameOver() {
-    isGameOver = true;
-    $('#face').removeClass('ooh');
-    $('#face').addClass('dead');
 }
