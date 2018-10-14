@@ -38,7 +38,7 @@ var offset = {
     y: 0
 };
 
-var socket = io();
+var socket;
 
 window.onload = function() {
     canvas = document.getElementById('gcanvas');
@@ -63,6 +63,8 @@ window.onload = function() {
     mapCanvas.addEventListener('mousedown', mapMouseDown, false);
     mapCanvas.addEventListener('mouseup', mapMouseUp, false);
     mapCanvas.addEventListener('mousemove', mapMouseMove, false);
+
+    socket = io();
 
     socket.on('draw', function(newGrid) {
         console.log('received draw');

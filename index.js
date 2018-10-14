@@ -17,7 +17,9 @@ app.get('/game.js', function(req, res){
 
 io.on('connection', function(socket){
   console.log('a user connected');
-  drawCanvas();
+
+  socket.emit('draw', grid);
+
   socket.on('click', function(click){
 
     if(isGameOver) {
