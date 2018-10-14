@@ -125,12 +125,12 @@ function drawMapCanvas(force) {
 
     for (row in grid) {
         for (col in grid[row]) {
-            if (mapIsMouseDown || force || !isOldTile(row, col) || (grid[row][col].state != oldGrid[row][col].state)) {
+            if (moveX !== 0 || moveY !== 0 || mapIsMouseDown || force || !isOldTile(row, col) || (grid[row][col].state != oldGrid[row][col].state)) {
                 drawMapTile(row, col);
             }
         }
     }
-    if (moveX !== 0 || moveY !== 0 || mapIsMouseDown || force || !isOldTile(row, col) || (grid[row][col].state != oldGrid[row][col].state)) {
+    if (moveX !== 0 || moveY !== 0 || mapIsMouseDown || force) {
         mapC.strokeStyle = "rgba(255,100,100,0.8)";
         mapC.strokeRect(offset.x / d.width, offset.y / d.width, 20, 20);
     }
