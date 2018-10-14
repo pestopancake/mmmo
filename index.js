@@ -58,8 +58,8 @@ http.listen(process.env.PORT || 8000, function(){
 
 
 var d = {
-    rows: 20,
-    cols: 20,
+    rows: 100,
+    cols: 100,
     width: 16,
     height: 16,
     bombChance: 0.1
