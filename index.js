@@ -107,7 +107,6 @@ function init() {
 function drawCanvas() {
     io.emit('draw', grid);
 }
-setInterval(drawCanvas, 1000);
 
 function isTile(row, col){
     if(grid[row] != undefined && grid[row][col] != undefined) {
