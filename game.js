@@ -92,11 +92,6 @@ window.onload = function() {
         d.cols = grid[0].length;
         drawCanvas();
     });
-    socket.on('gameover', function() {
-        isGameOver = true;
-        face.classList.remove('ooh');
-        face.classList.add('dead');
-    });
 
     setInterval(drawMapCanvas, 100);
 
@@ -118,9 +113,6 @@ function drawMapCanvas(force) {
       }
 
       drawCanvas(true);
-    } else {
-    //   mapC.fillStyle = "rgba(255,100,100,0.2)";
-    //   mapC.fillRect(offset.x / d.width, offset.y / d.width, 20, 20);
     }
 
     for (row in grid) {
@@ -142,7 +134,11 @@ function drawMapTile(row, col) {
     if (grid[row][col].state == 'blank') {
         mapC.fillStyle = "#770000";
     } else if (grid[row][col].state == 'flag') {
-        mapC.fillStyle = "#000077";
+        mapC.fillStyle = "#dd7777";
+    } else if (grid[row][col].state == 'bomb') {
+        mapC.fillStyle = "#ffff00";
+    } else if (grid[row][col].state == 'bombClicked') {
+        mapC.fillStyle = "#ff00ff";
     } else {
         mapC.fillStyle = "#000000";
     }
