@@ -65,6 +65,7 @@ window.onload = function() {
     mapCanvas.addEventListener('mousemove', mapMouseMove, false);
 
     socket.on('draw', function(newGrid) {
+        console.log('received draw');
         if (!isGameOver) $('#face').removeClass('dead');
         oldGrid = grid;
         grid = newGrid;

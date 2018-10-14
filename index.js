@@ -44,7 +44,7 @@ io.on('connection', function(socket){
 });
 
 http.listen(process.env.PORT || 8000, function(){
-  console.log('listening');
+  console.log('listening' + process.env.PORT);
 });
 
 
@@ -58,8 +58,8 @@ http.listen(process.env.PORT || 8000, function(){
 
 
 var d = {
-    rows: 100,
-    cols: 100,
+    rows: 20,
+    cols: 20,
     width: 16,
     height: 16,
     bombChance: 0.1
@@ -107,6 +107,7 @@ function init() {
 function drawCanvas() {
     io.emit('draw', grid);
 }
+setInterval(drawCanvas, 1000);
 
 function isTile(row, col){
     if(grid[row] != undefined && grid[row][col] != undefined) {
