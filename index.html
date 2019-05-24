@@ -33,45 +33,45 @@
       .tl {
         width: 10px;
         height: 10px;
-        background-image: url('/img/bordertl.gif');
+        background-image: url('img/bordertl.gif');
       }
       .tb {
         width: 10px;
         height: 10px;
-        background-image: url('/img/bordertb.gif');
+        background-image: url('img/bordertb.gif');
       }
       #face {
         width: 26px;
         height: 26px;
-        background-image: url('/img/facesmile.gif');
+        background-image: url('img/facesmile.gif');
       }
-      #face.ooh { background-image: url('/img/faceooh.gif'); }
-      #face.dead { background-image: url('/img/facedead.gif'); }
+      #face.ooh { background-image: url('img/faceooh.gif'); }
+      #face.dead { background-image: url('img/facedead.gif'); }
       #mapCanvas { cursor: pointer; }
     </style>
-    <script type="text/javascript" src="/js/bower_components/jquery/dist/jquery.min.js"></script>
-    <script src="/socket.io/socket.io.js"></script>
-    <script type="text/javascript" src="/game.js"></script>
+    <script type="text/javascript" src="js/bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="socket.io/socket.io.js"></script>
+    <script type="text/javascript" src="game.js"></script>
   </head>
   <body>
     <div class="wrapper-outer">
       <div class="wrapper">
-        <div style="height:360px; top: 10px; width: 10px; background: url('/img/borderlr.gif');"></div>
-        <div style="left:330px; top: 10px; height:360px; width: 10px; background: url('/img/borderlr.gif');"></div>
-        <div style="height:10px; width:330px; background: url('/img/bordertb.gif');"></div>
-        <div style="height:10px; width:10px; background: url('/img/bordertl.gif');"></div>
-        <div style="height:10px; width:10px; left: 330px; background: url('/img/bordertr.gif');"></div>
+        <div style="height:360px; top: 10px; width: 10px; background: url('img/borderlr.gif');"></div>
+        <div style="left:330px; top: 10px; height:360px; width: 10px; background: url('img/borderlr.gif');"></div>
+        <div style="height:10px; width:330px; background: url('img/bordertb.gif');"></div>
+        <div style="height:10px; width:10px; background: url('img/bordertl.gif');"></div>
+        <div style="height:10px; width:10px; left: 330px; background: url('img/bordertr.gif');"></div>
         
         <div id="face" style="top: 10px; left: 150px;"></div>
         
         <div style="position: relative;top: 36px;">
-          <div style="height:10px; width:10px; background: url('/img/borderjointl.gif');"></div>
-          <div style="left:10px; height:10px; width: 320px; background: url('/img/bordertb.gif');"></div>
-          <div style="left:330px; height:10px; width: 10px; background: url('/img/borderjointr.gif');"></div>
+          <div style="height:10px; width:10px; background: url('img/borderjointl.gif');"></div>
+          <div style="left:10px; height:10px; width: 320px; background: url('img/bordertb.gif');"></div>
+          <div style="left:330px; height:10px; width: 10px; background: url('img/borderjointr.gif');"></div>
           <canvas id="gcanvas" style="width: 320px; height: 320px; top: 10px; left: 10px;"></canvas>
-          <div style="top:330px;height:10px; width:10px; background: url('/img/borderbl.gif');"></div>
-          <div style="left:10px; top:330px; height:10px; width: 320px; background: url('/img/bordertb.gif');"></div>
-          <div style="left:330px; top:330px; height:10px; width: 10px; background: url('/img/borderbr.gif');"></div>
+          <div style="top:330px;height:10px; width:10px; background: url('img/borderbl.gif');"></div>
+          <div style="left:10px; top:330px; height:10px; width: 320px; background: url('img/bordertb.gif');"></div>
+          <div style="left:330px; top:330px; height:10px; width: 10px; background: url('img/borderbr.gif');"></div>
         </div>
       </div>
     </div>
