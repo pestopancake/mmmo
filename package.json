@@ -18,8 +18,5 @@
     "express": "^4.10.2",
     "node-gyp": "^2.0.0",
     "socket.io": "^2.0.1"
-  },
-  "engines": {
-    "node": "8.10.0"
   }
 }
